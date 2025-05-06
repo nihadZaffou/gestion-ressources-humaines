@@ -36,4 +36,8 @@ class Employe extends Authenticatable implements JWTSubject
     {
         return [];
     }
+    public function absences()
+{
+    return $this->hasMany(Absence::class, 'employe_id');
+}
 }
