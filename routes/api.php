@@ -1,6 +1,9 @@
 <?php
 
+
+use App\Http\Controllers\AbsenceController;
 use App\Http\Controllers\Admin\CongeValidationController;
+use App\Http\Controllers\RemboursementController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AdminAuthController;
@@ -43,4 +46,32 @@ Route::middleware('auth:admin')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/employe/conges', [CongeController::class, 'store']);
     Route::get('/employe/conges', [CongeController::class, 'index']);
+});
+//Abscence
+
+// Routes pour les absences des employés
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/employe/absences', [AbsenceController::class, 'demanderAbsence']);  // Demander une absence
+    Route::get('/employe/absences', [AbsenceController::class, 'mesAbsences']);  // Afficher les absences d'un employé
+});
+
+// Routes pour l'admin
+Route::middleware('auth:admin')->group(function () {
+    Route::get('/admin/absences', [AbsenceController::class, 'toutesAbsences']);  // Afficher toutes les absences
+    Route::post('/admin/absences', [AbsenceController::class, 'ajouterAbsencePourEmploye']);  // Ajouter une absence pour un employé
+    Route::put('/admin/absences/{id}/justification', [AbsenceController::class, 'validerJustification']);  // Valider la justification d'une absence
+});
+
+// Remboursements
+
+// Routes pour les employés
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/employe/remboursements', [RemboursementController::class, 'effectuerDemande']); 
+    Route::get('/employe/remboursements', [RemboursementController::class, 'afficherMesDemandes']);
+});
+
+// Routes pour l'admin
+Route::middleware('auth:admin')->group(function () {
+    Route::get('/admin/remboursements', [RemboursementController::class, 'toutesDemandes']);
+    Route::put('/admin/remboursements/{id}', [RemboursementController::class, 'mettreAJourStatut']); 
 });

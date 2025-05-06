@@ -15,7 +15,7 @@ class CongeValidationController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'statut' => 'required|in:approuve,rejete',
+            'statut'  => 'required|in:approuve,rejete',
             'explication' => 'nullable|string|max:255', // Validation pour l'explication
         ]);
         $conge = Conge::findOrFail($id);
