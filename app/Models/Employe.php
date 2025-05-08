@@ -9,7 +9,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class Employe extends Authenticatable implements JWTSubject
 {
-    use HasFactory ;use HasApiTokens;
+    use HasFactory, HasApiTokens;
 
     protected $fillable = [
         'nom',
@@ -26,7 +26,6 @@ class Employe extends Authenticatable implements JWTSubject
         'password',
     ];
 
-    // Obligatoire pour JWTSubject :
     public function getJWTIdentifier()
     {
         return $this->getKey();
@@ -36,8 +35,22 @@ class Employe extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
     public function absences()
-{
-    return $this->hasMany(Absence::class, 'employe_id');
+    {
+        return $this->hasMany(Absence::class, 'employe_id');
+    }
+
+    public function demandes()
+    {
+        return $this->hasMany(FormationDemande::class);
+    }
+
+    // Modification de la relation primes
+    public function primes()
+    {
+        return $this->belongsToMany(Prime::class, 'prime_employe', 'employe_id', 'prime_id')
+                    ->withPivot('date_attribution', 'montant', 'remarque');
+    }
 }
-}
+
