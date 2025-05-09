@@ -12,7 +12,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
 {
-    $schedule->command('absences:verifier-impact')->hourly();
+    $schedule->command('absences:verifier-impact')->daily();
 }
 
     /**

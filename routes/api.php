@@ -111,16 +111,18 @@ Route::middleware('auth:admin')->group(function () {
 
 // Admin routes pour la gestion des primes
 Route::middleware('auth:admin')->group(function () {
-    // Liste des primes
+    //  des primes
     Route::get('/admin/primes', [PrimeController::class, 'index']);
-    
-    // Créer une nouvelle prime
     Route::post('/admin/primes', [PrimeController::class, 'store']);
+    Route::put('/admin/primes/{id}', [PrimeController::class, 'updatePrime']);
+    Route::delete('/admin/primes/{id}', [PrimeController::class, 'deletePrime']);
     
     // Attribuer une prime à un employé
     Route::post('/admin/primes/attribuer', [PrimeController::class, 'attribuerPrime']);
-    
-    // Liste des primes pour un employé spécifique
+    Route::put('admin/prime-attributions/{id}', [PrimeController::class, 'updateAttribution']);
+    Route::delete('admin/prime-attributions/{id}', [PrimeController::class, 'deleteAttribution']);
+   
+    //  Liste des primes pour un employé spécifique
     Route::get('/admin/employe/{employe_id}/primes', [PrimeController::class, 'primesEmploye']);
 });
 // Employe routes pour la gestion des primes
