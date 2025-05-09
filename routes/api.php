@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\AbsenceController;
 use App\Http\Controllers\Admin\CongeValidationController;
+use App\Http\Controllers\AdminMaterial;
 use App\Http\Controllers\RemboursementController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -10,6 +11,7 @@ use App\Http\Controllers\API\AdminAuthController;
 use App\Http\Controllers\API\EmployeAuthController;
 use App\Http\Controllers\API\EmployeController;
 use App\Http\Controllers\Employe\CongeController;
+use App\Http\Controllers\MaterialController;
 
 //admin 
 Route::post('/admin/register', [AdminAuthController::class, 'register']);
@@ -70,8 +72,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/employe/remboursements', [RemboursementController::class, 'afficherMesDemandes']);
 });
 
+
 // Routes pour l'admin
 Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/remboursements', [RemboursementController::class, 'toutesDemandes']);
     Route::put('/admin/remboursements/{id}', [RemboursementController::class, 'mettreAJourStatut']); 
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('material', MaterialController::class);
+
+});
+Route::middleware('auth:admin')->group(function () {
+    Route::apiResource('admin/material',AdminMaterial::class);
 });
