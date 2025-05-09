@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('description')->nullable(); 
             $table->date('date_debut');
             $table->date('date_fin');
-            $table->integer('places_disponibles')->nullable();
+            $table->integer('places_disponibles');
             $table->timestamps(); 
         });
     }

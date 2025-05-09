@@ -12,7 +12,8 @@ class FormationController extends Controller
             'titre' => 'required|string|max:255',
             'description' => 'nullable|string',
             'date_debut' => 'required|date',
-            'date_fin' => 'required|date|after_or_equal:date_debut'
+            'date_fin' => 'required|date|after_or_equal:date_debut',
+            'places_disponibles' => 'required|integer|min:1',
         ]);
         $formation=Formation::create($validated);
         return response()->json(['message' => 'Formation ajoutée avec succès', 'data' => $formation], 201);
@@ -30,6 +31,7 @@ class FormationController extends Controller
         'description' => 'nullable|string',
         'date_debut' => 'sometimes|required|date',
         'date_fin' => 'sometimes|required|date|after_or_equal:date_debut',
+        'places_disponibles' => 'sometimes|required|integer|min:1',
     ]);
 
     $formation->update($request->all());
