@@ -14,7 +14,7 @@ class Formation extends Model
         'description',
         'date_debut',
         'date_fin',
-        'places_disponibles',
+        'places_disponibles'
     ];
 
 

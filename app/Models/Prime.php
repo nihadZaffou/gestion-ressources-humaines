@@ -9,7 +9,7 @@ class Prime extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nom', 'description'];
+    protected $fillable = ['nom', 'montant','description'];
 
     public function employePrimes()
     {

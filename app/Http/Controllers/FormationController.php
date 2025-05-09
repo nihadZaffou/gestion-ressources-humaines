@@ -31,7 +31,7 @@ class FormationController extends Controller
         'description' => 'nullable|string',
         'date_debut' => 'sometimes|required|date',
         'date_fin' => 'sometimes|required|date|after_or_equal:date_debut',
-        'places_disponibles' => 'sometimes|required|integer|min:1',
+        'places_disponibles'=>'required',
     ]);
 
     $formation->update($request->all());
