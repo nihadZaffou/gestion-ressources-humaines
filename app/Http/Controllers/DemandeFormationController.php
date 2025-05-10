@@ -63,7 +63,7 @@ class DemandeFormationController extends Controller
     }
 
     // ADMIN : afficher toutes les demandes
-    public function toutesLesDemandes()
+    public function toutesDemandes()
     {
         $demandes = FormationDemande::with(['formation', 'employe'])->get();
 

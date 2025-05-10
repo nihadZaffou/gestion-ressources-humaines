@@ -5,21 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Formation extends Model
+class Recrutement extends Model
 {
     use HasFactory;
-    
     protected $fillable = [
         'titre',
-        'description',
+        'poste',
+        'descriptionPoste',
+        'descriptionProfil',
         'date_debut',
         'date_fin',
-        'places_disponibles'
+        'statut'
     ];
-
-
-    public function demandes()
-    {
-        return $this->hasMany(FormationDemande::class);
-    }
 }

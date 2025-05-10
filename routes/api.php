@@ -12,10 +12,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AdminAuthController;
 use App\Http\Controllers\API\EmployeAuthController;
 use App\Http\Controllers\API\EmployeController;
+use App\Http\Controllers\CondidateurController;
 use App\Http\Controllers\DemandeFormationController;
 use App\Http\Controllers\Employe\CongeController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\PrimeController;
+use App\Http\Controllers\RecrutementController;
 
 //admin 
 Route::post('/admin/register', [AdminAuthController::class, 'register']);
@@ -142,6 +144,7 @@ Route::middleware('auth:admin')->group(function () {
     Route::apiResource('admin/material',AdminMaterial::class);
 });
 
+
 //fichepaie
 Route::middleware(['auth:admin'])->group(function () {
     // Générer une fiche de paie pour un employé pour un mois donné
@@ -161,3 +164,20 @@ Route::middleware('auth:sanctum')->group(function () {
     // Voir mes fiches de paie
     Route::get('/employe/mes-fiches-paie', [FichePaie::class, 'mesFiches']);
 });
+
+// Routes pour la gestion des recrutements
+Route::middleware('auth:admin')->group(function () {
+    Route::post('/admin/recrutements', [RecrutementController::class, 'store']);
+    Route::get('/admin/recrutements', [RecrutementController::class, 'index']);
+    Route::put('/admin/recrutements/{id}', [RecrutementController::class, 'update']);
+    Route::delete('/admin/recrutements/{id}', [RecrutementController::class, 'destroy']);
+});
+Route::middleware('auth:admin')->group(function () {
+    Route::get('admin/condidateurs', [CondidateurController::class, 'index']);
+    Route::get('admin/condidateurs/{id}', [CondidateurController::class, 'show']);
+    Route::put('admin/condidateurs/{id}', [CondidateurController::class, 'update']);
+});
+    Route::delete('admin/condidateurs/{id}', [CondidateurController::class, 'destroy']);
+    Route::post('admin/condidateurs', [CondidateurController::class, 'store']);
+
+
