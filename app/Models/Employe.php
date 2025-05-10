@@ -52,5 +52,9 @@ class Employe extends Authenticatable implements JWTSubject
         return $this->belongsToMany(Prime::class, 'prime_employe', 'employe_id', 'prime_id')
                     ->withPivot('date_attribution', 'montant', 'remarque');
     }
+    public function fichesDePaie()
+{
+    return $this->hasMany(FicheDePaie::class);
+}
 }
 
