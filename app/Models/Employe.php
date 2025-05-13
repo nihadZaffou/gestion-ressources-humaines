@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Notifications\Notifiable;
 
 class Employe extends Authenticatable implements JWTSubject
 {
-    use HasFactory, HasApiTokens;
+    use HasFactory, HasApiTokens,Notifiable;
 
     protected $fillable = [
         'nom',
@@ -55,6 +56,10 @@ class Employe extends Authenticatable implements JWTSubject
     public function fichesDePaie()
 {
     return $this->hasMany(FicheDePaie::class);
+}
+public function payrolls()
+{
+    return $this->hasMany(Payroll::class);
 }
 }
 

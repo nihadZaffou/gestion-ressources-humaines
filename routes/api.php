@@ -3,11 +3,10 @@
 
 use App\Http\Controllers\AbsenceController;
 use App\Http\Controllers\Admin\CongeValidationController;
+use App\Http\Controllers\FichePaieController;
 use App\Http\Controllers\AdminMaterial;
-use App\Http\Controllers\FichePaie;
 use App\Http\Controllers\FormationController;
 use App\Http\Controllers\RemboursementController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AdminAuthController;
 use App\Http\Controllers\API\EmployeAuthController;
@@ -145,24 +144,16 @@ Route::middleware('auth:admin')->group(function () {
 });
 
 
-//fichepaie
 Route::middleware(['auth:admin'])->group(function () {
-    // Générer une fiche de paie pour un employé pour un mois donné
-    Route::post('/admin/fiche-paie/generer', [FichePaie::class, 'genererFichePaie']);
-
-    // Télécharger la fiche de paie en PDF
-    Route::get('/admin/fiche-paie/pdf/{id}', [FichePaie::class, 'telechargerPDF']);
-
-    // Voir toutes les fiches de paie générées
-    Route::get('/admin/fiche-paies', [FichePaie::class, 'index']);
-
-    // Voir les fiches de paie d’un employé spécifique
-    Route::get('/admin/employe/{id}/fiche-paies', [FichePaie::class, 'fichePaiesEmploye']);
+   
+Route::post('/fiche-paie/send-all', [FichePaieController::class, 'generateFichePaieForAll']);
+Route::post('/fiche-paie/send-one/{id}', [FichePaieController::class, 'generateFichePaieForOne']);
 });
 //employe
 Route::middleware('auth:sanctum')->group(function () {
     // Voir mes fiches de paie
-    Route::get('/employe/mes-fiches-paie', [FichePaie::class, 'mesFiches']);
+    Route::get('/employe/mes-fiches-paie', [FichePaieController::class, 'mesFiches']);
+
 });
 
 // Routes pour la gestion des recrutements
@@ -179,5 +170,7 @@ Route::middleware('auth:admin')->group(function () {
 });
     Route::delete('admin/condidateurs/{id}', [CondidateurController::class, 'destroy']);
     Route::post('admin/condidateurs', [CondidateurController::class, 'store']);
+
+
 
 

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
+use Barryvdh\DomPDF\Facade as PDF;
 
 return [
 
@@ -168,6 +169,10 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+       Barryvdh\DomPDF\ServiceProvider::class,
+        Madnest\Madzipper\MadzipperServiceProvider::class,
+
+
     ])->toArray(),
 
     /*
@@ -183,6 +188,10 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
+        'Zipper' => Madnest\Madzipper\Facades\Madzipper::class,
+
+
+   
     ])->toArray(),
 
 ];
