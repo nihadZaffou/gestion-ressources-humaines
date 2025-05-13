@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AdminAuthController;
 use App\Http\Controllers\API\EmployeAuthController;
 use App\Http\Controllers\API\EmployeController;
+use App\Http\Controllers\AttestationsController;
 use App\Http\Controllers\CondidateurController;
 use App\Http\Controllers\DemandeFormationController;
 use App\Http\Controllers\Employe\CongeController;
@@ -180,4 +181,19 @@ Route::middleware('auth:admin')->group(function () {
     Route::delete('admin/condidateurs/{id}', [CondidateurController::class, 'destroy']);
     Route::post('admin/condidateurs', [CondidateurController::class, 'store']);
 
-
+Route::middleware('auth:admin')->group(function () {
+    Route::get('/admin/attestations', [AttestationsController::class, 'index']);
+    Route::post('/admin/attestations', [AttestationsController::class, 'store']);
+    Route::put('/admin/attestations/{id}', [AttestationsController::class, 'update']);
+    Route::delete('/admin/attestations/{id}', [AttestationsController::class, 'destroy']);
+    Route::get('/admin/attestation-demandes', [AttestationsController::class, 'getAllDemande']);
+    Route::put('/admin/updateStatut/{id}', [AttestationsController::class, 'updateStatut']);
+    Route::put('/admin/attestations/{id}/pdf', [AttestationsController::class, 'uploadAttestationPdf']);
+    Route::delete('/admin/attestations/{id}/pdf', [AttestationsController::class, 'deleteAttestationPdf']);
+});
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/employe/attestations', [AttestationsController::class, 'demandeAttestation']);
+    Route::get('/employe/attestations', [AttestationsController::class, 'getAllAttestations']);
+    Route::delete('/employe/attestations/{id}', [AttestationsController::class, 'deleteDemandeAttestation']);
+    Route::get('/employe/mes-demandes', [AttestationsController::class, 'getMyDemandes']);
+});

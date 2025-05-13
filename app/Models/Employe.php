@@ -45,6 +45,10 @@ class Employe extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(FormationDemande::class);
     }
+    public function attestations()
+    {
+        return $this->hasMany(Attestations::class);
+    }
 
     // Modification de la relation primes
     public function primes()
