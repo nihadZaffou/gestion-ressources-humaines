@@ -11,17 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('fiche_de_paies', function (Blueprint $table) {
+        Schema::create('attestations', function (Blueprint $table) {
             $table->id();
+            
+            $table->foreignId('type_id')->constrained('attestationtypes')->onDelete('cascade');
             $table->foreignId('employe_id')->constrained('employes')->onDelete('cascade');
-            $table->integer('mois');
-            $table->integer('annee');
-            $table->decimal('salaire_base', 10, 2);
-            $table->decimal('primes', 10, 2);
-            $table->decimal('remboursements', 10, 2);
-            $table->integer('absences');
-            $table->decimal('penalite', 10, 2);
-            $table->decimal('salaire_net', 10, 2);
+            $table->date('date_demande');
+            $table->date('date_livraison');
+            $table->enum('statut',['en attente' , 'accepte' , 'refuse'])->default('en attente');
+            $table->string('pdf')->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('attestations');
     }
 };
