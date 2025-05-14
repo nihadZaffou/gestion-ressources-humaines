@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class CongeValidationController extends Controller
 {
     public function index(){
-        $conges=Conge::all();
+        $conges = Conge::with('employe:id,nom,prenom')->get();
         return response()->json($conges);
     }
     public function update(Request $request, $id)
