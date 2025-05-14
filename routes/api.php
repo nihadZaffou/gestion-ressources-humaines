@@ -55,20 +55,18 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/employe/conges', [CongeController::class, 'index']);
 });
 //Abscence
-
+    Route::post('/employe/absences', [AbsenceController::class, 'demanderAbsence']);  // Demander une absence
+    Route::get('/employe/absences', [AbsenceController::class, 'mesAbsences']);  // Afficher les absences d'un employ
+    Route::get('/admin/absences', [AbsenceController::class, 'toutesAbsences']);  // Afficher toutes les absences
+    Route::post('/admin/absences', [AbsenceController::class, 'ajouterAbsencePourEmploye']);  // Ajouter une absence pour un employé
+    Route::put('/admin/absences/{id}/justification', [AbsenceController::class, 'validerJustification']);
 // Routes pour les absences des employés
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/employe/absences', [AbsenceController::class, 'demanderAbsence']);  // Demander une absence
-    Route::get('/employe/absences', [AbsenceController::class, 'mesAbsences']);  // Afficher les absences d'un employé
+    Route::get('/employe/absences', [AbsenceController::class, 'mesAbsences']);  // Afficher les absences d'un employ
+    Route::put('/employe/absences/{id}', [AbsenceController::class, 'update']);
+    Route::delete('/employe/absences/{id}', [AbsenceController::class, 'supprimer']);
 });
-
-// Routes pour l'admin
-Route::middleware('auth:admin')->group(function () {
-    Route::get('/admin/absences', [AbsenceController::class, 'toutesAbsences']);  // Afficher toutes les absences
-    Route::post('/admin/absences', [AbsenceController::class, 'ajouterAbsencePourEmploye']);  // Ajouter une absence pour un employé
-    Route::put('/admin/absences/{id}/justification', [AbsenceController::class, 'validerJustification']);  // Valider la justification d'une absence
-});
-
 // Remboursements
 
 // Routes pour les employés
@@ -142,14 +140,10 @@ Route::middleware('auth:sanctum')->group(function () {
 // Routes pour l'admin
 Route::middleware('auth:admin')->group(function () {
     Route::apiResource('admin/material',AdminMaterial::class);
-});
-
-
-Route::middleware(['auth:admin'])->group(function () {
-   
+}); 
 Route::post('/fiche-paie/send-all', [FichePaieController::class, 'generateFichePaieForAll']);
 Route::post('/fiche-paie/send-one/{id}', [FichePaieController::class, 'generateFichePaieForOne']);
-});
+
 //employe
 Route::middleware('auth:sanctum')->group(function () {
     // Voir mes fiches de paie
