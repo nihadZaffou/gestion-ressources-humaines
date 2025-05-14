@@ -37,6 +37,8 @@ class Absence extends Model
         return $this->belongsTo(Employe::class, 'employe_id');
 
     }
+ 
+
 
     /**
      * Accesseur : récupérer l'URL publique du justificatif

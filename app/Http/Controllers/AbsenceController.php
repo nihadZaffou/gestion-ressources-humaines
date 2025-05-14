@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 use App\Models\Absence;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 class AbsenceController extends Controller
 {
     public function demanderAbsence(Request $request)
@@ -69,19 +70,90 @@ class AbsenceController extends Controller
 
         return response()->json(['message' => 'Absence ajoutée par l\'admin']);
     }
-    public function validerJustification($id, Request $request)
-    {
-        $request->validate([
-            'justifiee' => 'required|boolean',
-        ]);
+   public function validerJustification($id, Request $request)
+{
+    $request->validate([
+        'justifiee' => 'required', // plus 'boolean' ici, on va le convertir manuellement
+        'justificatif' => 'nullable|file|mimes:pdf,jpg,png|max:2048',
+    ]);
 
-        $absence = Absence::findOrFail($id);
-        $absence->justifiee = $request->justifiee;
-        $absence->impact_salaire = !$request->justifiee; // si non justifiée → impact
+    $absence = Absence::findOrFail($id);
 
-        $absence->save();
+    // Convertir manuellement en booléen
+    $justifiee = filter_var($request->justifiee, FILTER_VALIDATE_BOOLEAN);
 
-        return response()->json(['message' => 'Statut de justification mis à jour']);
+    $absence->justifiee = $justifiee;
+    $absence->impact_salaire = !$justifiee;
+
+    if ($request->hasFile('justificatif')) {
+        $justificatifPath = $request->file('justificatif')->store('justificatifs', 'public');
+        $absence->justificatif = $justificatifPath;
     }
+
+    $absence->save();
+
+    return response()->json([
+        'message' => 'Justification mise à jour avec succès.',
+        'data' => $absence
+    ]);
+}
+
+
+
+public function update(Request $request, $id)
+{
+    $request->validate([
+        'date_debut' => 'required|date',
+        'date_fin' => 'nullable|date|after_or_equal:date_debut',
+        'motif' => 'required|string',
+        'justificatif' => 'nullable|file|mimes:pdf,jpg,png|max:2048',
+    ]);
+
+    $absence = Absence::findOrFail($id);
+    $employeId = auth()->user()->id;
+    if ($absence->employe_id !== $employeId) {
+        return response()->json(['message' => 'Vous ne pouvez pas modifier cette absence.'], 403);
+    }
+    $createdAt = Carbon::parse($absence->created_at);
+    if ($createdAt->diffInHours(now()) > 48) {
+        return response()->json(['message' => 'Vous ne pouvez plus modifier votre absence après 48 heures.'], 422);
+    }
+    $absence->date_debut = $request->date_debut;
+    $absence->date_fin = $request->date_fin ?? $request->date_debut;
+    $absence->motif = $request->motif;
+    if ($request->hasFile('justificatif')) {
+        $justificatifPath = $request->file('justificatif')->store('justificatifs', 'public');
+        $absence->justificatif = $justificatifPath;
+        $absence->justifiee = true;
+    }
+    $absence->impact_salaire = $absence->justifiee ? false : true;
+
+    $absence->save();
+
+    return response()->json([
+        'message' => 'Demande d\'absence mise à jour avec succès.',
+        'data' => $absence
+    ]);
+}
+
+public function supprimer($id)
+{
+
+    if (!auth()->check()) {
+        return response()->json(['message' => 'Vous devez être connecté pour supprimer une absence.'], 401);
+    }
+    $absence = Absence::findOrFail($id);
+    $employeId = auth()->user()->id;
+    if ($absence->employe_id !== $employeId) {
+        return response()->json(['message' => 'Vous ne pouvez pas supprimer cette absence.'], 403);
+    }
+    $createdAt = Carbon::parse($absence->created_at);
+    if ($createdAt->diffInHours(now()) > 48) {
+        return response()->json(['message' => 'Vous ne pouvez plus supprimer cette absence après 48 heures.'], 422);
+    }
+    $absence->delete();
+
+    return response()->json(['message' => 'Demande d\'absence supprimée avec succès.']);
+}
 }
 
