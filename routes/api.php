@@ -106,7 +106,7 @@ Route::middleware('auth:admin')->group(function () {
     Route::delete('/admin/formations/{id}', [FormationController::class, 'destroy']);
 
     // Voir toutes les demandes des employés
-    Route::get('/admin/demandes-formations', [DemandeFormationController::class, 'toutesLesDemandes']);
+    Route::get('/admin/demandes-formations', [DemandeFormationController::class, 'toutesDemandes']);
 
     // Valider ou rejeter une demande de formation
     Route::put('/admin/demandes-formations/{id}', [DemandeFormationController::class, 'changerStatut']);
@@ -181,6 +181,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/employe/attestations', [AttestationsController::class, 'demandeAttestation']);
     Route::get('/employe/attestations', [AttestationsController::class, 'getAllAttestations']);
     Route::delete('/employe/attestations/{id}', [AttestationsController::class, 'deleteDemandeAttestation']);
-    Route::get('/employe/mes-demandes', [AttestationsController::class, 'getMyDemandes']);
+    Route::get('/employe/mes-demandes/', [AttestationsController::class, 'getMyDemandes']);
 });
 

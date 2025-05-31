@@ -66,7 +66,6 @@ class DemandeFormationController extends Controller
     public function toutesDemandes()
     {
         $demandes = FormationDemande::with(['formation', 'employe'])->get();
-
         return response()->json($demandes);
     }
 
