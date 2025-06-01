@@ -16,6 +16,17 @@ class EmployeController extends Controller
         return response()->json(['message' => $Employes], 200);
     }
 
+
+    public function listForSelection(Request $request)
+    {
+        $employees = Employe::select('id', 'nom', 'prenom')
+                            ->orderBy('nom')
+                            ->orderBy('prenom')
+                            ->get();
+        return response()->json($employees);
+    }
+
+
     public function store(Request $request)
     {
         $validatedData = $request->validate([

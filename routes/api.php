@@ -35,6 +35,7 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/employes/{id}', [EmployeController::class, 'show']);   // Afficher un seul employé
     Route::put('/employes/{id}', [EmployeController::class, 'update']); // Modifier un employé
     Route::delete('/employes/{id}', [EmployeController::class, 'destroy']); // Supprimer un employé
+    Route::get('/admin/employees', [EmployeController::class, 'listForSelection']);
 });
 //employe auth
 Route::prefix('employe')->group(function () {
@@ -123,6 +124,7 @@ Route::middleware('auth:admin')->group(function () {
     // Attribuer une prime à un employé
     Route::post('/admin/primes/attribuer', [PrimeController::class, 'attribuerPrime']);
     Route::put('admin/prime-attributions/{id}', [PrimeController::class, 'updateAttribution']);
+    Route::get('/admin/prime-attributions', [PrimeController::class, 'indexAttributions']);
     Route::delete('admin/prime-attributions/{id}', [PrimeController::class, 'deleteAttribution']);
    
     //  Liste des primes pour un employé spécifique
