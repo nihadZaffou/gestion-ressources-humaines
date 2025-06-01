@@ -178,6 +178,8 @@ Route::middleware('auth:admin')->group(function () {
     Route::put('/admin/updateStatut/{id}', [AttestationsController::class, 'updateStatut']);
     Route::put('/admin/attestations/{id}/pdf', [AttestationsController::class, 'uploadAttestationPdf']);
     Route::delete('/admin/attestations/{id}/pdf', [AttestationsController::class, 'deleteAttestationPdf']);
+    Route::delete('/admin/deleteAttestation/{id}', [AttestationsController::class, 'destroyAttestaion']);
+    
 });
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/employe/attestations', [AttestationsController::class, 'demandeAttestation']);

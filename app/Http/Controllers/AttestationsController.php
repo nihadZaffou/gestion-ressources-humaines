@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 
 class AttestationsController extends Controller
 {
+    
     public function index()
     {
         $attestations = AttestationType::all();
@@ -177,7 +178,27 @@ class AttestationsController extends Controller
         }
     }
     // In AttestationsController.php
+        public function destroyAttestaion($id)
+    {   
+        try {
+            $attestation = Attestations::findOrFail($id);
 
+            if ($attestation->pdf) {
+                Storage::disk('public')->delete($attestation->pdf);
+            }
+
+            $attestation->delete();
+
+            return response()->json([
+                'message' => 'Attestation supprimée avec succès'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Une erreur est survenue lors de la suppression de l\'attestation',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
     public function deleteAttestationPdf($id)
     {
         try {
@@ -195,4 +216,5 @@ class AttestationsController extends Controller
             return response()->json(['message' => 'Erreur lors de la suppression du PDF', 'error' => $e->getMessage()], 500);
         }
     }
+
 }
