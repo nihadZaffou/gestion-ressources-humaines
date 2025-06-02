@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class PrimeController extends Controller
 {
+    
     public function index(Request $request) {
         $Primes = Prime::all();
         return response()->json($Primes);
@@ -64,38 +65,40 @@ public function indexAttributions() {
         ]);
     }
 
-    public function attribuerPrime(Request $request)
-    {
-        $request->validate([
-            'nom' => 'required|string',
-            'prenom' => 'required|string',
-            'prime_id' => 'required|exists:primes,id',
-            'date_attribution' => 'required|date',
-            'montant' => 'required|numeric|min:0'
-        ]);
+   public function attribuerPrime(Request $request)
+{
+    $request->validate([
+        'nom' => 'required|string',
+        'prenom' => 'required|string',
+        'prime_id' => 'required|exists:primes,id',
+        'date_attribution' => 'required|date',
+        'montant' => 'required|numeric|min:0',
+        'remarque' => 'nullable|string'
+    ]);
 
-        $employe = Employe::where('nom', $request->nom)
-                          ->where('prenom', $request->prenom)
-                          ->first();
+    $employe = Employe::where('nom', $request->nom)
+                      ->where('prenom', $request->prenom)
+                      ->first();
 
-        if (!$employe) {
-            return response()->json([
-                'message' => 'Employé non trouvé'
-            ], 404);
-        }
-
-        $employePrime = EmployePrime::create([
-            'employe_id' => $employe->id,
-            'prime_id' => $request->prime_id,
-            'date_attribution' => $request->date_attribution,
-            'montant' => $request->montant
-        ]);
-
+    if (!$employe) {
         return response()->json([
-            'message' => 'Prime attribuée avec succès à ' . $employe->nom . ' ' . $employe->prenom,
-            'data' => $employePrime
-        ]);
+            'message' => 'Employé non trouvé'
+        ], 404);
     }
+
+    $employePrime = EmployePrime::create([
+        'employe_id' => $employe->id,
+        'prime_id' => $request->prime_id,
+        'date_attribution' => $request->date_attribution,
+        'montant' => $request->montant,
+        'remarque' => $request->remarque, // هادي
+    ]);
+
+    return response()->json([
+        'message' => 'Prime attribuée avec succès à ' . $employe->nom . ' ' . $employe->prenom,
+        'data' => $employePrime
+    ]);
+}
 
     public function updateAttribution(Request $request, $id)
     {

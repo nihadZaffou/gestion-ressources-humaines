@@ -74,13 +74,17 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/employe/remboursements', [RemboursementController::class, 'effectuerDemande']); 
     Route::get('/employe/remboursements', [RemboursementController::class, 'afficherMesDemandes']);
+    Route::put('/employe/remboursements/{id}', [RemboursementController::class, 'modifierDemande']);
+    Route::delete('/employe/remboursements/{id}', [RemboursementController::class, 'supprimerDemande']);
 });
 
 // Routes pour l'admin
 Route::middleware('auth:admin')->group(function () {
-    Route::get('/admin/remboursements', [RemboursementController::class, 'toutesDemandes']);
-    Route::put('/admin/remboursements/{id}', [RemboursementController::class, 'mettreAJourStatut']); 
-});
+        Route::get('/admin/remboursements', [RemboursementController::class, 'toutesDemandes']);
+        Route::put('/admin/remboursements/{id}', [RemboursementController::class, 'mettreAJourStatut']); 
+        Route::delete('/admin/remboursements/{id}', [RemboursementController::class, 'supprimerDemandeAdmin']);
+
+ });
 //employe
 Route::middleware('auth:sanctum')->group(function () {
     // Liste des formations disponibles

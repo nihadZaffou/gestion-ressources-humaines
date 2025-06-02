@@ -31,7 +31,7 @@ class RemboursementController extends Controller
         ]);
 
         $justificationPath = $request->hasFile('justification')
-            ? $request->file('justification')->store('justifications')
+            ? $request->file('justification')->store('pdfs', 'public')
             : null;
 
         $remboursement = Remboursement::create([
@@ -71,4 +71,68 @@ class RemboursementController extends Controller
             'data' => $remboursement
         ]);
     }
+    public function supprimerDemande($id)
+{
+    $remboursement = Remboursement::where('id', $id)
+        ->where('employe_id', Auth::id())
+        ->where('status', 'en attente')
+        ->first();
+
+    if (!$remboursement) {
+        return response()->json(["message" => "Demande introuvable ou déjà traitée."], 403);
+    }
+
+    $remboursement->delete();
+
+    return response()->json(["message" => "Demande supprimée avec succès."]);
+}
+public function modifierDemande(Request $request, $id)
+{
+    $remboursement = Remboursement::where('id', $id)
+        ->where('employe_id', Auth::id())
+        ->where('status', 'en attente')
+        ->first();
+
+    if (!$remboursement) {
+        return response()->json(["message" => "Demande introuvable ou déjà traitée."], 403);
+    }
+
+    $request->validate([
+        'type' => 'sometimes|string',
+        'montant' => 'sometimes|numeric|min:0',
+        'justification' => 'nullable|file|mimes:pdf,jpg,png|max:2048',
+    ]);
+
+    if ($request->hasFile('justification')) {
+        $remboursement->justification = $request->file('justification')->store('pdfs');
+    }
+
+    if ($request->has('type')) {
+        $remboursement->type = $request->type;
+    }
+
+    if ($request->has('montant')) {
+        $remboursement->montant = $request->montant;
+    }
+
+    $remboursement->save();
+
+    return response()->json([
+        'message' => 'Demande mise à jour avec succès.',
+        'data' => $remboursement
+    ]);
+}
+public function supprimerDemandeAdmin($id)
+{
+    $remboursement = Remboursement::find($id);
+
+    if (!$remboursement) {
+        return response()->json(['message' => 'Demande non trouvée.'], 404);
+    }
+
+    $remboursement->delete();
+
+    return response()->json(['message' => 'Demande supprimée avec succès.']);
+}
+
 }

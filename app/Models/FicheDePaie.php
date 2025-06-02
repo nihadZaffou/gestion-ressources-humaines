@@ -18,6 +18,7 @@ class FicheDePaie extends Model
         'absences',
         'penalite',
         'salaire_net',
+        'remarque',
     ];
 
     public function employe()
